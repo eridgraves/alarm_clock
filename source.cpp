@@ -13,7 +13,7 @@
 //
 //********************************************************************
 
-#define NOMINMAX    // Avoid collision of max() in std and windows.h
+//#define NOMINMAX    // Avoid collision of max() in std and windows.h
 
 #include <ctime>    // Used for local_time() and tm struct
 #include <chrono>   // Clock functions
@@ -21,10 +21,10 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include "Windows.h"
+//#include "Windows.h"
 #include <string>
 
-using namespace std::this_thread; 
+using namespace std::this_thread;
 using namespace std::chrono;
 using namespace std;
 
@@ -34,19 +34,19 @@ class alarm { // NO DESTRUCTOR
 public:
 	//void set();         // Gets inout for alarm                                      <====================== CHANGE THIS NAME
 	void alarm_set();     // Sets an alarm
-	bool error_check();   // Error checks the set alarm 
+	bool error_check();   // Error checks the set alarm
 	void display(int);    // Displays the time
-	long calc_delay();    // Calculates the delay     
-	void delay(long);     // Sleep_for(long delay) 
+	long calc_delay();    // Calculates the delay
+	void delay(long);     // Sleep_for(long delay)
 	void display_time();
-	void new_delay(long); // Sleep_for(long delay) 
+	void new_delay(long); // Sleep_for(long delay)
 	int get_hrs();        // Return alarm time
 	int get_mins();
 	void sleep(int);      // Int because sleep is a short time, not more than a few minutes
 	bool sleep_flag = false; // Default value?
 	void write_log();     // Write time to log
 	void read_log();
-    bool log_state;       // True = first run, false = second run
+  bool log_state;       // True = first run, false = second run
 	long delays[3];       // Array holding delay (calculated when set) for each alarm
 	void error();         // Displays error
 	bool a1_flag;
@@ -73,14 +73,14 @@ public:
 private:
 	int hrs;            // Alarm Time Variables
 	int mins;
-	//int seconds;      
+	//int seconds;
 };
 
 int main() {
 
 	// TODO: When the user presses the set alarm button, change the value of alarm_set
 
-	
+
 	// Declare Time Structures
 	struct tm *tmp;
 	time_t s;
@@ -102,8 +102,8 @@ int main() {
 	} while (!((input <= 3) && (input >= 0)));
 
 	// If there are zero alarms to be set, don't set any alarms
-	if (input == 0) { 
-		alarm_set = false; 
+	if (input == 0) {
+		alarm_set = false;
 	}
 	else {
 		while(input > 0) {
@@ -112,7 +112,7 @@ int main() {
 			// Runs one time when an alarm is set by the user
 			if (alarm_set) { // Pretty sure this if is redundant
 				a.alarm_set();
-				// Write start time to log  
+				// Write start time to log
 				a.log_state = true;
 				a.write_log();
 
@@ -142,17 +142,17 @@ int main() {
 					}
 					continue;
 				}
-				
+
 			}
 			input-= 1;
 		}
 		// Clear Alarm set flag
 		alarm_set = false;
 	}
-	system("CLS");
+	system("clear");
 
 	// The loop for the clock
-	// Runs every second 
+	// Runs every second
 	// Displays the current time
 	// Checks if alarms are set, updates them, and displays them
 	while (1) {
@@ -209,7 +209,7 @@ int main() {
 		sleep_for(seconds(1));
 
 		// Clear the screen (to update the displayed time)
-		system("CLS");
+		system("clear");
 
 		// ====================================================================================
 		// CHECK IF ALARM BUTTON IS PRESSED AND SET FLAG
@@ -223,7 +223,7 @@ int main() {
 			else if(a.delays[0] <= 0){
 				//a.write_log();
 				a.display(1);
-				
+
 			}
 			//else {
 			//	cout << "Error in alarm displaying main";
@@ -236,7 +236,7 @@ int main() {
 			else if (a.delays[1] <= 0) {
 				//a.write_log();
 				a.display(2);
-				
+
 			}
 			//else {
 				//cout << "Error in alarm displaying main";
@@ -249,7 +249,7 @@ int main() {
 			else if (a.delays[2] <= 0) {
 				//a.write_log();
 				a.display(3);
-				
+
 			}
 			//else {
 			//	cout << "Error in alarm displaying main";
@@ -260,7 +260,7 @@ int main() {
 	}
 	system("pause");
 	return 0;
-	
+
 }
 
 /*
@@ -320,7 +320,8 @@ void alarm::display(int alarm) {
 	//MessageBeep(0xffffffff);
 	int x = rand() % 5;
 	for (; x < 5; x++) {
-		Beep(750, 300);
+		//Beep(750, 300);
+		cout << "BEEP\n";
 		sleep_for(seconds(1));
 	}
 
@@ -339,7 +340,7 @@ void alarm::display(int alarm) {
 	//Calculate time spent in the display
 	int delay_time = system_clock::to_time_t(system_clock::now()) - dis_time;
 
-	system("CLS");
+	system("clear");
 	switch (alarm) {
 	case 1:
 		delays[0] -= delay_time; // Subtract the time spent in the display
@@ -372,7 +373,7 @@ void alarm::delay(long delay) {
 }
 
 void alarm::display_time() {
-	system("CLS");
+	system("clear");
 	auto now = system_clock::now(); // Get the current time -- should be system_clock::time_point type
 	auto converted_now = system_clock::to_time_t(now);
 	cout << put_time(localtime(&converted_now), "%X") << endl;
@@ -449,7 +450,7 @@ long alarm::calc_delay() {  // Should this be in minutes?
 		cout << "ERROR IN alarm::delay() HOUR DELAY\n";
 	}
 
-	//sleep_for(seconds(3600 * hr_delay)); 
+	//sleep_for(seconds(3600 * hr_delay));
 	//======================================================//
 
 	return (hr_delay * 3600 + min_delay * 60 - current_sec);
@@ -472,10 +473,10 @@ void alarm::sleep(int delay) {
 	struct tm *tmp;
 	time_t s;
 
-	system("CLS");
+	system("clear");
 
 	for (int x = delay; x > 0; x--) {
-		
+
 		// Update time structures
 		s = time(NULL);
 		tmp = localtime(&s);
@@ -483,7 +484,7 @@ void alarm::sleep(int delay) {
 		// Display current local time hh:mm:ss
 		printf("%02d:%02d:%02d\nSleep Timer Active\n" /*Format allows for the leading zeros to be printed in the time*/, tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
 		sleep_for(seconds(1));
-		system("CLS");
+		system("clear");
 	}
 }
 
